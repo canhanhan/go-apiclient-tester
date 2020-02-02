@@ -1,0 +1,255 @@
+{
+  "info": {
+      "_postman_id": "0ac26d2f-790a-45a2-948a-21a30c963856",
+      "name": "Test Collection",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+      {
+          "name": "test_category",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "name": "Content-Type",
+                      "value": "application/json",
+                      "type": "text"
+                  },
+                  {
+                      "key": "Accept",
+                      "value": "application/json",
+                      "type": "text"
+                  }
+              ],
+              "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"test_user\",\r\n    \"password\": \"test_pwd\",\r\n    \"eauth\": \"pam\"\r\n}",
+                  "options": {
+                      "raw": {
+                          "language": "json"
+                      }
+                  }
+              },
+              "url": {
+                  "raw": "{{URL}}/login",
+                  "host": [
+                      "{{URL}}"
+                  ],
+                  "path": [
+                      "login"
+                  ]
+              }
+          },
+          "response": [
+              {
+                  "name": "test_scenario1",
+                  "originalRequest": {
+                      "method": "POST",
+                      "header": [
+                          {
+                              "key": "Content-Type",
+                              "name": "Content-Type",
+                              "value": "application/json",
+                              "type": "text"
+                          },
+                          {
+                              "key": "Accept",
+                              "value": "application/json",
+                              "type": "text"
+                          }
+                      ],
+                      "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"username\": \"bad_user\",\r\n    \"password\": \"test_pwd\",\r\n    \"eauth\": \"pam\"\r\n}",
+                          "options": {
+                              "raw": {
+                                  "language": "json"
+                              }
+                          }
+                      },
+                      "url": {
+                          "raw": "{{URL}}/login",
+                          "host": [
+                              "{{URL}}"
+                          ],
+                          "path": [
+                              "login"
+                          ]
+                      }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "html",
+                  "header": [
+                      {
+                          "key": "Content-Length",
+                          "value": "447"
+                      },
+                      {
+                          "key": "Access-Control-Expose-Headers",
+                          "value": "GET, POST"
+                      },
+                      {
+                          "key": "Content-Encoding",
+                          "value": "gzip"
+                      },
+                      {
+                          "key": "Vary",
+                          "value": "Accept-Encoding"
+                      },
+                      {
+                          "key": "Server",
+                          "value": "CherryPy/8.9.1"
+                      },
+                      {
+                          "key": "Allow",
+                          "value": "GET, HEAD, POST"
+                      },
+                      {
+                          "key": "Access-Control-Allow-Credentials",
+                          "value": "true"
+                      },
+                      {
+                          "key": "Date",
+                          "value": "Sat, 01 Feb 2020 23:46:44 GMT"
+                      },
+                      {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                      },
+                      {
+                          "key": "Content-Type",
+                          "value": "text/html;charset=utf-8"
+                      },
+                      {
+                          "key": "Set-Cookie",
+                          "value": "session_id=f117a2b0770cbe42413ca2a3ec10c4527348c5c2; expires=Sun, 02 Feb 2020 09:46:44 GMT; Path=/"
+                      }
+                  ],
+                  "cookie": [],
+                  "body": "<!DOCTYPE html PUBLIC\n\"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n    <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></meta>\n        <title>401 Unauthorized</title>\n      </head>\n    <body>\n        <h2>401 Unauthorized</h2>\n        <p>Could not authenticate using provided credentials</p>\n       </body>\n</html>"
+              },
+              {
+                  "name": "test_scenario2",
+                  "originalRequest": {
+                      "method": "POST",
+                      "header": [
+                          {
+                              "key": "Content-Type",
+                              "name": "Content-Type",
+                              "value": "application/json",
+                              "type": "text"
+                          },
+                          {
+                              "key": "Accept",
+                              "value": "application/json",
+                              "type": "text"
+                          }
+                      ],
+                      "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"username\": \"test_user\",\r\n    \"password\": \"test_pwd\",\r\n    \"eauth\": \"pam\"\r\n}",
+                          "options": {
+                              "raw": {
+                                  "language": "json"
+                              }
+                          }
+                      },
+                      "url": {
+                          "raw": "{{URL}}/login",
+                          "host": [
+                              "{{URL}}"
+                          ],
+                          "path": [
+                              "login"
+                          ]
+                      }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                      {
+                          "key": "Content-Length",
+                          "value": "174"
+                      },
+                      {
+                          "key": "Access-Control-Expose-Headers",
+                          "value": "GET, POST"
+                      },
+                      {
+                          "key": "Vary",
+                          "value": "Accept-Encoding"
+                      },
+                      {
+                          "key": "Server",
+                          "value": "SampleServer"
+                      },
+                      {
+                          "key": "Allow",
+                          "value": "GET, HEAD, POST"
+                      },
+                      {
+                          "key": "Access-Control-Allow-Credentials",
+                          "value": "true"
+                      },
+                      {
+                          "key": "Date",
+                          "value": "Sat, 01 Feb 2020 23:45:58 GMT"
+                      },
+                      {
+                          "key": "Access-Control-Allow-Origin",
+                          "value": "*"
+                      },
+                      {
+                          "key": "X-Auth-Token",
+                          "value": "f117a2b0770cbe42413ca2a3ec10c4527348c5c2"
+                      },
+                      {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                      },
+                      {
+                          "key": "Set-Cookie",
+                          "value": "session_id=f117a2b0770cbe42413ca2a3ec10c4527348c5c2; expires=Sun, 02 Feb 2020 09:45:58 GMT; Path=/"
+                      }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"return\": [\n        {\n            \"perms\": {},\n            \"start\": 1580600758.704145,\n            \"token\": \"f117a2b0770cbe42413ca2a3ec10c4527348c5c2\",\n            \"expire\": 1580643958.704146,\n            \"user\": \"test_user\",\n            \"eauth\": \"pam\"\n        }\n    ]\n}"
+              }
+          ]
+      }
+  ],
+  "event": [
+      {
+          "listen": "prerequest",
+          "script": {
+              "id": "113781ab-8ed2-443c-ab22-cbdfd1d0e881",
+              "type": "text/javascript",
+              "exec": [
+                  ""
+              ]
+          }
+      },
+      {
+          "listen": "test",
+          "script": {
+              "id": "6e805d39-a3a5-4c57-9ee7-ac5c91791fa2",
+              "type": "text/javascript",
+              "exec": [
+                  ""
+              ]
+          }
+      }
+  ],
+  "variable": [
+      {
+          "id": "03ce8499-f5d4-41b7-84fa-1a107a15cc7e",
+          "key": "URL",
+          "value": "http://192.168.50.10:8000",
+          "type": "string"
+      }
+  ],
+  "protocolProfileBehavior": {}
+}
