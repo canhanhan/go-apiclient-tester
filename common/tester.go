@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,7 +34,9 @@ func NewTester(categories map[string]TestCategory) *Tester {
 }
 
 func (t *Tester) Close() {
-	t.server.Close()
+	if t.server != nil {
+		t.server.Close()
+	}
 }
 
 func (tester *Tester) Setup(t *testing.T, category string, scenario string) {
@@ -66,14 +69,18 @@ func (tester *Tester) Setup(t *testing.T, category string, scenario string) {
 			}
 
 			if cType, ok := s.Request.Headers["Content-Type"]; ok && cType == "application/json" {
-				expectedData := make(map[string]interface{})
-				if err := json.Unmarshal(expectedBody, &expectedData); err != nil {
-					t.Fatal(err)
+				var expectedData interface{}
+				if len(expectedBody) > 0 {
+					if err := json.Unmarshal(expectedBody, &expectedData); err != nil {
+						t.Fatal(err)
+					}
 				}
 
-				actualData := make(map[string]interface{})
-				if err := json.Unmarshal(actualBody, &actualData); err != nil {
-					t.Fatal(err)
+				var actualData interface{}
+				if len(actualBody) > 0 {
+					if err := json.Unmarshal(actualBody, &actualData); err != nil {
+						t.Fatal(err)
+					}
 				}
 
 				assert.Equal(t, expectedData, actualData)
@@ -83,10 +90,12 @@ func (tester *Tester) Setup(t *testing.T, category string, scenario string) {
 		}
 
 		for k, v := range s.Response.Headers {
+			if k == "Content-Length" {
+				continue
+			}
+
 			w.Header().Add(k, v)
 		}
-
-		w.WriteHeader(s.Response.Code)
 
 		if s.Response.Body != nil {
 			resBody, err := ioutil.ReadAll(s.Response.Body)
@@ -94,10 +103,16 @@ func (tester *Tester) Setup(t *testing.T, category string, scenario string) {
 				t.Fatal(err)
 			}
 
+			resLen := strconv.Itoa(len(resBody))
+			w.Header().Add("Content-Length", resLen)
+			w.WriteHeader(s.Response.Code)
+
 			_, err = w.Write(resBody)
 			if err != nil {
 				t.Fatal(err)
 			}
+		} else {
+			w.WriteHeader(s.Response.Code)
 		}
 	})
 }

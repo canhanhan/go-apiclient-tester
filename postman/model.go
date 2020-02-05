@@ -46,7 +46,15 @@ type PostmanItem struct {
 	Response []PostmanResponse `json:"response"`
 }
 
+type PostmanVariable struct {
+	Id    string `json:"id"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
+	Type  string `json:"type"`
+}
+
 type PostmanCollection struct {
-	Info  PostmanCollectionInfo `json:"info"`
-	Items []PostmanItem         `json:"item"`
+	Info      PostmanCollectionInfo `json:"info"`
+	Items     []PostmanItem         `json:"item"`
+	Variables []PostmanVariable     `json:"variable"`
 }

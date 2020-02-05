@@ -2,9 +2,11 @@ package postman
 
 import (
 	"encoding/json"
-	"github.com/finarfin/go-apiclient-tester/common"
+	"fmt"
 	"io/ioutil"
 	"strings"
+
+	"github.com/finarfin/go-apiclient-tester/common"
 )
 
 func NewTester(path string) (*common.Tester, error) {
@@ -13,9 +15,15 @@ func NewTester(path string) (*common.Tester, error) {
 		return nil, err
 	}
 
-	return &common.Tester{
-		Categories: categories,
-	}, nil
+	return common.NewTester(categories), nil
+}
+
+func replaceVars(c PostmanCollection, value string) string {
+	for _, v := range c.Variables {
+		value = strings.ReplaceAll(value, fmt.Sprintf("{{%s}}", v.Key), v.Value)
+	}
+
+	return value
 }
 
 func parse(path string) (categories map[string]common.TestCategory, err error) {
@@ -35,26 +43,27 @@ func parse(path string) (categories map[string]common.TestCategory, err error) {
 		for _, s := range v.Response {
 			reqHdr := make(map[string]string)
 			for _, h := range s.OriginalRequest.Headers {
-				reqHdr[h.Key] = h.Value
+				reqHdr[h.Key] = replaceVars(c, h.Value)
 			}
 
 			resHdr := make(map[string]string)
 			for _, h := range s.Headers {
-				resHdr[h.Key] = h.Value
+				resHdr[h.Key] = replaceVars(c, h.Value)
 			}
 
 			scenarios[s.Name] = common.TestScenario{
 				Request: common.TestRequest{
 					Method:  s.OriginalRequest.Method,
-					Path:    s.OriginalRequest.URL.Path[0],
+					Path:    replaceVars(c, "/"+strings.Join(s.OriginalRequest.URL.Path, "/")),
 					Headers: reqHdr,
-					Body:    strings.NewReader(s.OriginalRequest.Body.Raw),
+					Body:    strings.NewReader(replaceVars(c, s.OriginalRequest.Body.Raw)),
 				},
 				Response: common.TestResponse{
 					Code:    s.Code,
 					Status:  s.Status,
 					Headers: resHdr,
-					Body:    strings.NewReader(s.Body),
+
+					Body: strings.NewReader(replaceVars(c, s.Body)),
 				},
 			}
 		}
