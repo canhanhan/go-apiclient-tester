@@ -83,6 +83,12 @@ func CompareRequests(t *testing.T, expected *TestRequest, actual *http.Request) 
 	}
 
 	if expected.Body != nil {
+		// Rewind expected body
+		_, err = expected.Body.Seek(0, 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		expectedBody, err := ioutil.ReadAll(expected.Body)
 		if err != nil {
 			t.Fatal(err)
@@ -120,6 +126,12 @@ func WriteResponse(t *testing.T, resp *TestResponse, w http.ResponseWriter) {
 	}
 
 	if resp.Body != nil {
+		// Rewind body
+		_, err := resp.Body.Seek(0, 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		resBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			t.Fatal(err)

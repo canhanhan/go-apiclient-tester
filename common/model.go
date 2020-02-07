@@ -6,14 +6,14 @@ type TestRequest struct {
 	Method  string
 	Path    string
 	Headers map[string]string
-	Body    io.Reader
+	Body    io.ReadSeeker
 }
 
 type TestResponse struct {
 	Code    int
 	Status  string
 	Headers map[string]string
-	Body    io.Reader
+	Body    io.ReadSeeker
 }
 
 type TestScenario struct {
