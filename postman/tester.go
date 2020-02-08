@@ -18,7 +18,7 @@ func NewTester(path string) (*tester.Tester, error) {
 	return tester.NewTester(categories), nil
 }
 
-func replaceVars(c PostmanCollection, value string) string {
+func replaceVars(c postmanCollection, value string) string {
 	for _, v := range c.Variables {
 		value = strings.ReplaceAll(value, fmt.Sprintf("{{%s}}", v.Key), v.Value)
 	}
@@ -32,7 +32,7 @@ func parse(path string) (categories map[string]tester.TestCategory, err error) {
 		return
 	}
 
-	var c PostmanCollection
+	var c postmanCollection
 	if err = json.Unmarshal(b, &c); err != nil {
 		return
 	}
