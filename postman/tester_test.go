@@ -1,11 +1,12 @@
 package postman
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestSomething(t *testing.T) {
+func TestSampleImport(t *testing.T) {
 	tester, err := NewTester("testdata/sample.json")
 	if err != nil {
 		t.Fatal(err)
