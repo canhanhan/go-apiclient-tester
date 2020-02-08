@@ -1,4 +1,4 @@
-package common
+package tester
 
 import (
 	"bytes"
@@ -85,55 +85,56 @@ func TestResponseNil(t *testing.T) {
 }
 
 func setup() *Tester {
-	categories := make(map[string]TestCategory)
-	categories["test_category"] = TestCategory{
-		Scenarios: map[string]TestScenario{
-			"test_json": TestScenario{
-				Request: TestRequest{
-					Method: "POST",
-					Path:   "/sample_path",
-					Headers: map[string]string{
-						"Content-Type": "application/json",
+	categories := map[string]TestCategory{
+		"test_category": TestCategory{
+			Scenarios: map[string]TestScenario{
+				"test_json": TestScenario{
+					Request: TestRequest{
+						Method: "POST",
+						Path:   "/sample_path",
+						Headers: map[string]string{
+							"Content-Type": "application/json",
+						},
+						Body: strings.NewReader("{\"test1\":\"req1\",\"test2\":3}"),
 					},
-					Body: strings.NewReader("{\"test1\":\"req1\",\"test2\":3}"),
-				},
-				Response: TestResponse{
-					Code: 200,
-					Headers: map[string]string{
-						"Content-Type": "application/json",
-					},
-					Body: strings.NewReader("{\"test1\":\"test1\",\"test2\":2}"),
-				},
-			},
-			"test_header": TestScenario{
-				Request: TestRequest{
-					Method: "POST",
-					Path:   "/sample_path",
-				},
-				Response: TestResponse{
-					Code: 200,
-					Headers: map[string]string{
-						"SampleHeader": "SampleValue",
+					Response: TestResponse{
+						Code: 200,
+						Headers: map[string]string{
+							"Content-Type": "application/json",
+						},
+						Body: strings.NewReader("{\"test1\":\"test1\",\"test2\":2}"),
 					},
 				},
-			},
-			"test_text": TestScenario{
-				Request: TestRequest{
-					Method: "GET",
-					Path:   "/sample_path",
+				"test_header": TestScenario{
+					Request: TestRequest{
+						Method: "POST",
+						Path:   "/sample_path",
+					},
+					Response: TestResponse{
+						Code: 200,
+						Headers: map[string]string{
+							"SampleHeader": "SampleValue",
+						},
+					},
 				},
-				Response: TestResponse{
-					Code: 200,
-					Body: strings.NewReader("Hello World"),
+				"test_text": TestScenario{
+					Request: TestRequest{
+						Method: "GET",
+						Path:   "/sample_path",
+					},
+					Response: TestResponse{
+						Code: 200,
+						Body: strings.NewReader("Hello World"),
+					},
 				},
-			},
-			"test_nil_response": TestScenario{
-				Request: TestRequest{
-					Method: "GET",
-					Path:   "/sample_path",
-				},
-				Response: TestResponse{
-					Code: 200,
+				"test_nil_response": TestScenario{
+					Request: TestRequest{
+						Method: "GET",
+						Path:   "/sample_path",
+					},
+					Response: TestResponse{
+						Code: 200,
+					},
 				},
 			},
 		},

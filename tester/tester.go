@@ -1,4 +1,4 @@
-package common
+package tester
 
 import (
 	"encoding/json"
@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Tester provides methods to test a HTTP API client.
 type Tester struct {
 	Categories map[string]TestCategory
 	URL        string
@@ -20,6 +21,30 @@ type Tester struct {
 	server *httptest.Server
 }
 
+/*
+NewTester creates a new Tester
+	categories := map[string]tester.TestCategory{
+		"users": tester.TestCategory{
+			Scenarios: map[string]tester.TestScenario{
+				"create": TestScenario{
+					Request: TestRequest{
+						Method: "POST",
+						Path:   "/user",
+						Headers: map[string]string{"Content-Type": "application/json"},
+						Body: strings.NewReader("{\"username\":\"user1\"}"),
+					},
+					Response: TestResponse{
+						Code: 200,
+						Headers: map[string]string{"Content-Type": "application/json"},
+						Body: strings.NewReader("{\"id\":1,\"username\":\"user1\"}"),
+					},
+				},
+			},
+		}
+	}
+
+	api := tester.NewTester(categories)
+*/
 func NewTester(categories map[string]TestCategory) *Tester {
 	mux := http.NewServeMux()
 	server := httptest.NewServer(mux)
@@ -34,12 +59,22 @@ func NewTester(categories map[string]TestCategory) *Tester {
 	return &t
 }
 
-func (t *Tester) Close() {
-	if t.server != nil {
-		t.server.Close()
+/*
+Close stops the HTTP server.
+
+Use defer api.Close() in each test case to ensure the server is closed and resources are released.
+
+Example:
+	api := tester.NewTester(categories)
+	defer api.Close()
+*/
+func (tester *Tester) Close() {
+	if tester.server != nil {
+		tester.server.Close()
 	}
 }
 
+// Scenario returns a configured TestScenario.
 func (tester *Tester) Scenario(category string, scenario string) (*TestScenario, error) {
 	c, ok := tester.Categories[category]
 	if !ok {
@@ -54,6 +89,17 @@ func (tester *Tester) Scenario(category string, scenario string) (*TestScenario,
 	return &s, nil
 }
 
+/*
+Setup configures a route for the TestScenario.
+
+Example:
+	api.Setup(t, "user", "online")
+
+	err := c.WaitUserOnline("user1")
+	if err != nil {
+		t.Fatal(err)
+	}
+*/
 func (tester *Tester) Setup(t *testing.T, category string, scenario string) {
 	s, err := tester.Scenario(category, scenario)
 	if err != nil {
@@ -66,10 +112,40 @@ func (tester *Tester) Setup(t *testing.T, category string, scenario string) {
 	})
 }
 
+/*
+Do creates a route for the handler function provided.
+
+Example:
+	offline, err := api.Scenario("user", "offline")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	online, err := api.Scenario("user", "online")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	scenarios := []*tester.TestScenario{offline, online}
+	current := 0
+
+	api.Do(offline.Path, func(w http.ResponseWriter, req *http.Request) {
+		tester.WriteResponse(t, &scenarios[current].Response, w)
+		current++
+	})
+
+	err := c.WaitUserOnline("user1")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, 2, current)
+*/
 func (tester *Tester) Do(pattern string, handler func(http.ResponseWriter, *http.Request)) {
 	tester.mux.HandleFunc(pattern, handler)
 }
 
+// CompareRequests compare TestScenario to an actual HTTP request
 func CompareRequests(t *testing.T, expected *TestRequest, actual *http.Request) {
 	actualBody, err := ioutil.ReadAll(actual.Body)
 	if err != nil {
@@ -116,6 +192,7 @@ func CompareRequests(t *testing.T, expected *TestRequest, actual *http.Request) 
 	}
 }
 
+// WriteResponse writes TestResponse to an actual HTTP ResponseWriter
 func WriteResponse(t *testing.T, resp *TestResponse, w http.ResponseWriter) {
 	for k, v := range resp.Headers {
 		if k == "Content-Length" {
