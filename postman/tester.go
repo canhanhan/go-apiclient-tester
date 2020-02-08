@@ -9,6 +9,22 @@ import (
 	"github.com/finarfin/go-apiclient-tester/tester"
 )
 
+/*
+NewTester returns a Tester initialized from a Postman collection
+
+Example:
+	tester, err := postman.NewTester("testdata/sample_collection.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tester.Close()
+	tester.Setup("user", "create_success")
+
+	_, err = c.CreateUser("user1")
+	if err != nil {
+		t.Fatal(err)
+	}
+*/
 func NewTester(path string) (*tester.Tester, error) {
 	categories, err := parse(path)
 	if err != nil {
